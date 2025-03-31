@@ -116,8 +116,8 @@ def main(args):
                         "No gello port found, please specify one or plug in gello"
                     )
             if args.start_joints is None:
-                reset_joints = np.deg2rad(
-                    [0, -90, 90, -90, -90, 0, 0]
+                reset_joints = np.array(
+                    [0.042075014575147014,-0.434512132160122,-0.15138632061541854,-2.30978606244883,-0.09235301071910774,1.9074035683790689,0.7684965791339136, 1.]
                 )  # Change this to your own reset joints
             else:
                 reset_joints = args.start_joints
@@ -157,7 +157,6 @@ def main(args):
     max_joint_delta = 0.8
     if abs_deltas[id_max_joint_delta] > max_joint_delta:
         id_mask = abs_deltas > max_joint_delta
-        print()
         ids = np.arange(len(id_mask))[id_mask]
         for i, delta, joint, current_j in zip(
             ids,
@@ -190,6 +189,9 @@ def main(args):
     joints = obs["joint_positions"]
     action = agent.act(obs)
     if (action - joints > 0.5).any():
+        print(action)
+        print(joints)
+        print(action - joints)
         print("Action is too big")
 
         # print which joints are too big

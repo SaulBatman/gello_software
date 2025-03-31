@@ -4,6 +4,14 @@ See the GELLO hardware repo for the STL files and hardware instructions for buil
 ```
 git clone https://github.com/wuphilipp/gello_software.git
 cd gello_software
+git submodule init
+git submodule update
+docker compose up -d
+docker logs gello_run
+docker exec -it gello_run bash
+python scripts/gello_get_offset.py --start-joints 0.042075014575147014 -0.434512132160122 -0.15138632061541854 -2.30978606244883 -0.09235301071910774 1.9074035683790689 0.7684965791339136 --joint-signs 1 -1 1 -1 1 -1 1 --port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FT94EJRF-if00-port0
+#pip install -e third_party/DynamixelSDK/python
+docker compose down -t 0 # stop docker
 ```
 
 <p align="center">
