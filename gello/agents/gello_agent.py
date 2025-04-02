@@ -146,3 +146,6 @@ class GelloAgent(Agent):
         else:
             self._robot.set_torque_mode(False)
             return dyna_joints
+
+    def get_joint_state(self)-> np.ndarray:
+        return self._robot.get_joint_state()
