@@ -14,6 +14,25 @@ python scripts/gello_get_offset.py --start-joints 0.042075014575147014 -0.434512
 docker compose down -t 0 # stop docker
 ```
 
+```
+0. prepare
+docker compose build
+docker compose up -d
+1. open polymetis arm control
+docker exec -it gello_run bash
+launch_robot.py robot_client=franka_hardware
+
+2. open polymetis gripper control
+docker exec -it gello_run bash
+launch_gripper.py gripper=franka_hand
+
+3. open gello panda interface with polymetis
+docker exec -it gello_run bash
+python experiments/launch_nodes.py --robot=panda
+
+4. start gello BE CAREFUL!
+python experiments/run_env.py --agent=gello
+```
 <p align="center">
   <img src="imgs/title.png" />
 </p>

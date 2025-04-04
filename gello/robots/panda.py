@@ -13,10 +13,11 @@ class PandaRobot(Robot):
 
     def __init__(self, robot_ip: str = "100.97.47.74"):
         from polymetis import GripperInterface, RobotInterface
-
+        print("initializing robot")
         self.robot = RobotInterface(
-            ip_address=robot_ip,
+            ip_address="localhost",
         )
+        print("initializing gripper")
         self.gripper = GripperInterface(
             ip_address="localhost",
         )

@@ -1,4 +1,5 @@
 # keep in alphabetical order
+protobuf==3.18.3
 dm_control
 Pillow
 pygame
