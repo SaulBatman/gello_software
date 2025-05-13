@@ -44,6 +44,15 @@ class PandaRobot(Robot):
         gripper_pos = self.gripper.get_state()
         pos = np.append(robot_joints, gripper_pos.width / MAX_OPEN)
         return pos
+    
+    def get_ee_pose(self) -> np.ndarray:
+        """Get the current state of the leader robot.
+
+        Returns:
+            T: The current state of the leader robot.
+        """
+        pos_quat = self.robot.get_ee_pose()
+        return pos_quat
 
     def command_joint_state(self, joint_state: np.ndarray) -> None:
         """Command the leader robot to a given state.
@@ -58,7 +67,7 @@ class PandaRobot(Robot):
 
     def get_observations(self) -> Dict[str, np.ndarray]:
         joints = self.get_joint_state()
-        pos_quat = np.zeros(7)
+        pos_quat = self.get_ee_pose()
         gripper_pos = np.array([joints[-1]])
         return {
             "joint_positions": joints,
