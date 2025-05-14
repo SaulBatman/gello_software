@@ -1,6 +1,7 @@
 import time
 from typing import Dict
 
+import torch
 import numpy as np
 
 from gello.robots.robot import Robot
@@ -51,8 +52,9 @@ class PandaRobot(Robot):
         Returns:
             T: The current state of the leader robot.
         """
-        pos_quat = self.robot.get_ee_pose()
-        return pos_quat
+        pos, quat = self.robot.get_ee_pose()
+        pos_quat = torch.cat([pos, quat])
+        return pos_quat.numpy()
 
     def command_joint_state(self, joint_state: np.ndarray) -> None:
         """Command the leader robot to a given state.
@@ -63,7 +65,12 @@ class PandaRobot(Robot):
         import torch
 
         self.robot.update_desired_joint_positions(torch.tensor(joint_state[:-1]))
-        self.gripper.goto(width=(MAX_OPEN * (1 - joint_state[-1])), speed=1, force=1)
+        if joint_state[-1] > 0.5:
+            # self.gripper.grasp(speed=1, force=1, epsilon_inner=0.02, epsilon_outer=0.02, blocking=True)
+            self.gripper.goto(width=0., speed=1, force=1, blocking=True)
+        else:
+            self.gripper.goto(width=MAX_OPEN, speed=1, force=1, blocking=True)
+        # self.gripper.goto(width=(MAX_OPEN * (1 - joint_state[-1])), speed=1, force=1)
 
     def get_observations(self) -> Dict[str, np.ndarray]:
         joints = self.get_joint_state()

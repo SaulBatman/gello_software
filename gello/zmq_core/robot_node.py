@@ -96,6 +96,18 @@ class ZMQClientRobot(Robot):
         self._socket.send(send_message)
         result = pickle.loads(self._socket.recv())
         return result
+    
+    def get_ee_pose(self) -> np.ndarray:
+        """Get the current state of the leader robot.
+
+        Returns:
+            T: The current state of the leader robot.
+        """
+        request = {"method": "get_ee_pose"}
+        send_message = pickle.dumps(request)
+        self._socket.send(send_message)
+        result = pickle.loads(self._socket.recv())
+        return result
 
     def command_joint_state(self, joint_state: np.ndarray) -> None:
         """Command the leader robot to the given state.

@@ -37,7 +37,7 @@ def print_color(*args, color=None, attrs=(), **kwargs):
 
 @dataclass
 class Args:
-    agent: str = "none"
+    agent: str = "gello"
     robot_port: int = 6001
     wrist_camera_port: int = 5000
     base_camera_port: int = 5001
@@ -57,6 +57,8 @@ def publish_state(obs: dict):
     for key, value in obs.items():
         if isinstance(value, np.ndarray):
             obs[key] = value.tolist()
+        elif isinstance(value, Tuple):
+            obs[key] = np.concatenate([value[0], value[1]]).tolist()
         else:
             # If the value is a dictionary itself, you might need to recursively process it
             # For simplicity here, we assume a flat structure or that nested dicts don't contain ndarrays
@@ -64,7 +66,7 @@ def publish_state(obs: dict):
             # A more robust solution might involve a recursive function for deep conversion.
             obs[key] = value
     obs['timestamp'] = time.time()
-    print(obs)
+    # print(obs)
     # Using a topic for filtering on subscriber side (optional but good practice)
     topic = "gello_state"
     message_data = json.dumps(obs) #.encode('utf-8')
@@ -247,6 +249,7 @@ def main(args):
     start_time = time.time()
     while True:
         publish_state(obs)
+        # print(obs['joint_positions'])
         num = time.time() - start_time
         message = f"\rTime passed: {round(num, 2)}          "
         print_color(

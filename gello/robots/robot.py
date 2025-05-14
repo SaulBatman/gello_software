@@ -27,6 +27,7 @@ class Robot(Protocol):
             T: The current state of the leader robot.
         """
         raise NotImplementedError
+    
 
     @abstractmethod
     def command_joint_state(self, joint_state: np.ndarray) -> None:
