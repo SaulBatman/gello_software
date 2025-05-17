@@ -53,7 +53,9 @@ class Args:
     bimanual: bool = False
     verbose: bool = False
 
-def publish_state(obs: dict):
+def publish_state(obs: dict, action: np.array):
+    obs['timestamp'] = time.time()
+    obs['action'] = action
     for key, value in obs.items():
         if isinstance(value, np.ndarray):
             obs[key] = value.tolist()
@@ -65,7 +67,6 @@ def publish_state(obs: dict):
             # directly without their own conversion step.
             # A more robust solution might involve a recursive function for deep conversion.
             obs[key] = value
-    obs['timestamp'] = time.time()
     # print(obs)
     # Using a topic for filtering on subscriber side (optional but good practice)
     topic = "gello_state"
@@ -248,7 +249,7 @@ def main(args):
     save_path = None
     start_time = time.time()
     while True:
-        publish_state(obs)
+        publish_state(obs, action)
         # print(obs['joint_positions'])
         num = time.time() - start_time
         message = f"\rTime passed: {round(num, 2)}          "
