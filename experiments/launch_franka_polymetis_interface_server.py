@@ -51,11 +51,14 @@ class FrankaInterface:
             time_to_go=time_to_go
         )
     
-    def start_cartesian_impedance(self, Kx, Kxd):
-        self.robot.start_cartesian_impedance(
-            Kx=torch.Tensor(Kx),
-            Kxd=torch.Tensor(Kxd)
-        )
+    def start_cartesian_impedance(self, Kx=None, Kxd=None):
+        if Kx==None and Kxd==None:
+            self.robot.start_cartesian_impedance()
+        else:
+            self.robot.start_cartesian_impedance(
+                Kx=torch.Tensor(Kx),
+                Kxd=torch.Tensor(Kxd)
+            )
 
     def update_desired_ee_pose(self, pose):
         pose = np.asarray(pose)
